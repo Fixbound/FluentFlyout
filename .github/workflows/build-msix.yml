@@ -9,7 +9,7 @@ on:
       - 'FluentFlyoutMSIX/Package.appxmanifest'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -71,3 +71,23 @@ jobs:
         with:
           name: FluentFlyout_${{ env.APP_VERSION }}_${{ env.PLATFORM }}_${{ matrix.configuration == 'GitHub Release' && 'Installer' || 'Release' }}
           path: InstallerOutput\
+
+      - name: Publish GitHub Release installer
+        if: matrix.configuration == 'GitHub Release'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $zipName = "FluentFlyout_${{ env.APP_VERSION }}_${{ env.PLATFORM }}_Installer.zip"
+          $zipPath = "$env:GITHUB_WORKSPACE\$zipName"
+          Remove-Item $zipPath -ErrorAction Ignore
+          Compress-Archive -Path "InstallerOutput\*" -DestinationPath $zipPath
+          $sha = (Get-FileHash -Path $zipPath -Algorithm SHA256).Hash.ToLower()
+          $tag = "v${{ env.APP_VERSION }}"
+          $notes = "GitHub Release x64 installer: $zipName`nGitHub Release x64 checksum: $sha"
+          gh release view $tag 2>$null | Out-Null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag --title "FluentFlyout $tag" --notes $notes
+          } else {
+            gh release edit $tag --title "FluentFlyout $tag" --notes $notes
+          }
+          gh release upload $tag $zipPath --clobber

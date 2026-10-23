@@ -72,6 +72,24 @@ public partial class HomePage : Page
 
         if (UpdateState.Current.IsUpdateAvailable)
         {
+            // manual flow ignores SkippedUpdateVersion: a deliberate check always offers the update
+            bool inAppAvailable = !string.IsNullOrEmpty(UpdateState.Current.AssetUrl) &&
+                !string.IsNullOrEmpty(UpdateState.Current.ExpectedSha256);
+
+            if (inAppAvailable)
+            {
+                try
+                {
+                    await UpdateInstallerService.ShowUpdateChoiceAndApplyAsync();
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, "Failed to run in-app update flow from HomePage.");
+                }
+
+                return;
+            }
+
             string url = !string.IsNullOrEmpty(UpdateState.Current.UpdateUrl) ? UpdateState.Current.UpdateUrl : "https://fluentflyout.com/changelog/";
             UpdateCheckerService.OpenUpdateUrl(url);
         }
@@ -94,6 +112,8 @@ public partial class HomePage : Page
                 UpdateState.Current.IsUpdateAvailable = result.IsUpdateAvailable;
                 UpdateState.Current.NewestVersion = result.NewestVersion;
                 UpdateState.Current.UpdateUrl = result.UpdateUrl;
+                UpdateState.Current.AssetUrl = result.AssetUrl;
+                UpdateState.Current.ExpectedSha256 = result.ExpectedSha256;
                 UpdateState.Current.LastUpdateCheck = result.CheckedAt;
 
                 UpdateLastCheckedText();

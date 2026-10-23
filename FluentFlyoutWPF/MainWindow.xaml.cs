@@ -260,11 +260,29 @@ public partial class MainWindow : MicaWindow
                 UpdateState.Current.IsUpdateAvailable = result.IsUpdateAvailable;
                 UpdateState.Current.NewestVersion = result.NewestVersion;
                 UpdateState.Current.UpdateUrl = result.UpdateUrl;
+                UpdateState.Current.AssetUrl = result.AssetUrl;
+                UpdateState.Current.ExpectedSha256 = result.ExpectedSha256;
                 UpdateState.Current.LastUpdateCheck = result.CheckedAt;
 
                 if (result.IsUpdateAvailable)
                 {
-                    Notifications.ShowUpdateAvailableNotification(result.NewestVersion, result.UpdateUrl);
+                    bool skipped = SettingsManager.Current.SkippedUpdateVersion == result.NewestVersion;
+
+                    if (SettingsManager.Current.AutoUpdateEnabled &&
+                        !SettingsManager.Current.IsStoreVersion &&
+                        !skipped &&
+                        !string.IsNullOrEmpty(result.AssetUrl) &&
+                        !string.IsNullOrEmpty(result.ExpectedSha256))
+                    {
+                        if (!await UpdateInstallerService.AutoApplyPendingUpdateAsync())
+                        {
+                            Notifications.ShowUpdateFailedToast(result.NewestVersion);
+                        }
+                    }
+                    else if (!skipped)
+                    {
+                        Notifications.ShowUpdateAvailableNotification(result.NewestVersion, result.UpdateUrl);
+                    }
                 }
             }
         }

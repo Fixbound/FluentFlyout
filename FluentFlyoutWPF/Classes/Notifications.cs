@@ -1,7 +1,9 @@
-﻿// Copyright (c) 2024-2026 The FluentFlyout Authors
+// Copyright (c) 2024-2026 The FluentFlyout Authors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 using FluentFlyout.Classes.Settings;
+using FluentFlyoutWPF.Classes.Services;
+using FluentFlyoutWPF.ViewModels;
 using Microsoft.Toolkit.Uwp.Notifications;
 using NLog;
 using System.Runtime.InteropServices;
@@ -38,6 +40,9 @@ internal static class Notifications
                         {
                             OpenUrlInBrowser(url);
                         }
+                        break;
+                    case "updateNow":
+                        UpdateInstallerService.ShowUpdateChoiceAndApplyAsync().CatchError("Failed to run in-app update flow.");
                         break;
                 }
             }
@@ -110,10 +115,13 @@ internal static class Notifications
 
         try
         {
+            // when the installer asset and its digest are known, clicking the toast applies the update in-app
+            bool inAppAvailable = !string.IsNullOrEmpty(UpdateState.Current.AssetUrl) && !string.IsNullOrEmpty(UpdateState.Current.ExpectedSha256);
+
             var builder = new ToastContentBuilder()
                 .AddText(Application.Current.FindResource("UpdateAvailableNotificationTitle").ToString())
                 .AddText(string.Format(Application.Current.FindResource("UpdateAvailableNotificationMessage").ToString(), newVersion))
-                .AddArgument("action", "downloadUpdate");
+                .AddArgument("action", inAppAvailable ? "updateNow" : "downloadUpdate");
 
             // only add download button if URL is available
             if (!string.IsNullOrEmpty(updateUrl))
@@ -134,6 +142,28 @@ internal static class Notifications
         catch (Exception ex)
         {
             Logger.Error(ex, "Failed to show update available notification");
+        }
+    }
+
+    /// <summary>
+    /// Show a toast reporting that an automatic in-app update attempt failed; clicking it re-runs the manual update flow.
+    /// </summary>
+    public static void ShowUpdateFailedToast(string newVersion)
+    {
+        try
+        {
+            var builder = new ToastContentBuilder()
+                .AddText(Application.Current.FindResource("UpdateFailedToastTitle").ToString())
+                .AddText(string.Format(Application.Current.FindResource("UpdateFailedToastMessage").ToString(), newVersion))
+                .AddArgument("action", "updateNow");
+
+            builder.Show();
+
+            Logger.Info($"Displayed update failed toast for {newVersion}");
+        }
+        catch (Exception ex)
+        {
+            Logger.Error(ex, "Failed to show update failed toast");
         }
     }
 

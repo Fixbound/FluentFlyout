@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2024-2026 The FluentFlyout Authors
+// Copyright (c) 2024-2026 The FluentFlyout Authors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 using FluentFlyout.Classes.Settings;
@@ -35,6 +35,32 @@ public sealed class FluentFlyoutApiClient
         {
             OnRequestTimedOut();
             throw;
+        }
+    }
+
+    public static async Task<string> GetUrlAsync(string absoluteUrl)
+    {
+        var client = new HttpClient
+        {
+            Timeout = _timeout
+        };
+
+        UpdateUserAgent(client);
+
+        try
+        {
+            var result = await client.GetStringAsync(absoluteUrl);
+            OnRequestSucceeded();
+            return result;
+        }
+        catch (Exception ex) when (IsTimeout(ex))
+        {
+            OnRequestTimedOut();
+            throw;
+        }
+        finally
+        {
+            client.Dispose();
         }
     }
 
@@ -86,11 +112,16 @@ public sealed class FluentFlyoutApiClient
 
     private static void UpdateUserAgent()
     {
+        UpdateUserAgent(_client);
+    }
+
+    private static void UpdateUserAgent(HttpClient client)
+    {
         string appVersion = SettingsManager.Current.LastKnownVersion;
         string normalizedVersion = string.IsNullOrWhiteSpace(appVersion) ? "unknown" : appVersion;
 
-        _client.DefaultRequestHeaders.UserAgent.Clear();
-        _client.DefaultRequestHeaders.UserAgent.ParseAdd($"FluentFlyout/{normalizedVersion}");
+        client.DefaultRequestHeaders.UserAgent.Clear();
+        client.DefaultRequestHeaders.UserAgent.ParseAdd($"FluentFlyout/{normalizedVersion}");
     }
 
     private static void RenewClient()

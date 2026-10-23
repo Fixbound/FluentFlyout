@@ -185,6 +185,13 @@
                 <ui:ToggleSwitch IsChecked="{Binding ShowUpdateNotifications, Mode=TwoWay}" />
             </ui:CardControl>
 
+            <ui:CardControl x:Name="AllowAutoUpdatesTitleCard" Tag="Indexable" Margin="0,0,0,36" >
+                <ui:CardControl.Header>
+                    <TextBlock Text="{DynamicResource AllowAutoUpdatesTitle}" FontSize="14" FontWeight="Regular" VerticalAlignment="Center" />
+                </ui:CardControl.Header>
+                <ui:ToggleSwitch IsChecked="{Binding AutoUpdateEnabled, Mode=TwoWay}" />
+            </ui:CardControl>
+
             <!-- app filtering -->
             <ui:CardAction x:Name="AppFilteringTitleCard" Tag="Indexable" Margin="0,0,0,4" Icon="{ui:SymbolIcon Filter24}" IsChevronVisible="True" Click="AppFiltering_Click">
                 <StackPanel>
