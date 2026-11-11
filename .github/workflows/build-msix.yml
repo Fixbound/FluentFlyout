@@ -2,13 +2,6 @@ name: Build and Package MSIX
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - master
-    tags:
-      - 'v*'
-    paths:
-      - 'FluentFlyoutMSIX/Package.appxmanifest'
 
 permissions:
   contents: write
