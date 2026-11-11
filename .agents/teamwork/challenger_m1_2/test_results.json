@@ -1,0 +1,128 @@
+[
+  {
+    "TestId": "T1.1",
+    "Description": "Valid ZIP with SystemFiles/Add-AppDevPackage.ps1",
+    "Status": "PASS",
+    "Details": "Script found at: E:\\Programacion\\FluentFlyout\\.agents\\teamwork\\challenger_m1_2\\test_scratch\\run_1_1\\files\\SystemFiles\\Add-AppDevPackage.ps1"
+  },
+  {
+    "TestId": "T1.2",
+    "Description": "Empty 0-byte archive file",
+    "Status": "PASS",
+    "Details": "Properly caught InvalidDataException without crashing: Central Directory corrupt."
+  },
+  {
+    "TestId": "T1.3",
+    "Description": "Valid empty zip archive (0 entries)",
+    "Status": "PASS",
+    "Details": "Extracted cleanly, identified missing Add-AppDevPackage.ps1 before shutdown"
+  },
+  {
+    "TestId": "T1.4",
+    "Description": "Corrupt ZIP (random garbage payload)",
+    "Status": "PASS",
+    "Details": "Safely caught extraction exception: End of Central Directory record could not be found."
+  },
+  {
+    "TestId": "T1.5",
+    "Description": "Truncated ZIP header/data",
+    "Status": "PASS",
+    "Details": "Safely caught truncated zip error: End of Central Directory record could not be found."
+  },
+  {
+    "TestId": "T1.6",
+    "Description": "Incomplete ZIP (missing Add-AppDevPackage.ps1)",
+    "Status": "PASS",
+    "Details": "Cleanly detected missing installer script"
+  },
+  {
+    "TestId": "T1.7",
+    "Description": "Nested ZIP hierarchy discovery fallback",
+    "Status": "PASS",
+    "Details": "Successfully discovered nested Add-AppDevPackage.ps1 in: E:\\Programacion\\FluentFlyout\\.agents\\teamwork\\challenger_m1_2\\test_scratch\\run_1_7\\files\\FluentFlyout_2.16.0_x64\\SystemFiles"
+  },
+  {
+    "TestId": "T1.8",
+    "Description": "Pre-existing extraction directory cleanup",
+    "Status": "PASS",
+    "Details": "Overwrote and cleaned previous dirty extraction directory cleanly"
+  },
+  {
+    "TestId": "T1.9",
+    "Description": "ZipSlip Path Traversal Protection",
+    "Status": "PASS",
+    "Details": "Blocked with System.IO.IOException: Extracting Zip entry would have resulted in a file outside the specified destination directory."
+  },
+  {
+    "TestId": "T2.1",
+    "Description": "PowerShell AST Validation - Standard Path",
+    "Status": "PASS",
+    "Details": "Syntax errors: 0"
+  },
+  {
+    "TestId": "T2.2",
+    "Description": "PowerShell AST Validation - Path with single quote",
+    "Status": "PASS",
+    "Details": "Escaped single quotes cleanly parsed, errors: 0"
+  },
+  {
+    "TestId": "T2.3",
+    "Description": "PowerShell AST Validation - Brackets, Dollar Signs, Spaces",
+    "Status": "PASS",
+    "Details": "Special characters cleanly parsed, errors: 0"
+  },
+  {
+    "TestId": "T2.4",
+    "Description": "Simulated apply.ps1 execution & transcript logging",
+    "Status": "PASS",
+    "Details": "ExitCode: 0, Log exists: True, Marker created: True"
+  },
+  {
+    "TestId": "T2.5",
+    "Description": "apply.ps1 error handling & transcript capture on failure",
+    "Status": "PASS",
+    "Details": "Error logged in transcript as expected. Transcript captured error message: True"
+  },
+  {
+    "TestId": "T3.1",
+    "Description": "ProcessStartInfo Arguments format & script quoting",
+    "Status": "PASS",
+    "Details": "Arguments properly quoted: -NoProfile -ExecutionPolicy Bypass -File \"C:\\Users\\Test User\\AppData\\Local\\Temp\\FluentFlyout\\updates\\2.16.0\\123456\\apply.ps1\""
+  },
+  {
+    "TestId": "T3.2",
+    "Description": "Process Detachment parameters (UseShellExecute, Verb=runas)",
+    "Status": "PASS",
+    "Details": "Verified UseShellExecute=true ensures independent elevated lifecycle"
+  },
+  {
+    "TestId": "T3.3",
+    "Description": "UAC elevation cancellation exception handling",
+    "Status": "PASS",
+    "Details": "Win32Exception(1223) caught cleanly in ApplyRun catch block"
+  },
+  {
+    "TestId": "T4.1",
+    "Description": "Scratch update run retention (keep newest 3, delete older)",
+    "Status": "PASS",
+    "Details": "Retained: 1700000030, 1700000040, 1700000050, Expected: 1700000030, 1700000040, 1700000050"
+  },
+  {
+    "TestId": "T4.2",
+    "Description": "Pruning of orphaned version folders",
+    "Status": "PASS",
+    "Details": "ver1 (empty) removed: True, ver2 (has runs) preserved: True"
+  },
+  {
+    "TestId": "T4.3",
+    "Description": "Partial download error cleanup",
+    "Status": "PASS",
+    "Details": "Partial download file successfully purged on download error"
+  },
+  {
+    "TestId": "T4.4",
+    "Description": "CleanOldUpdateRuns exception suppression on locked directory",
+    "Status": "PASS",
+    "Details": "Non-crashing warning logged when run directory cannot be deleted"
+  }
+]

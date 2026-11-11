@@ -1,0 +1,250 @@
+[
+  {
+    "Area": "Staging",
+    "TestName": "CleanOldUpdateRuns handles non-existent root without error",
+    "Status": "PASS",
+    "Expected": "No Exception",
+    "Actual": "No Exception",
+    "Details": ""
+  },
+  {
+    "Area": "Staging",
+    "TestName": "CleanOldUpdateRuns handles empty updates root",
+    "Status": "PASS",
+    "Expected": "No Exception",
+    "Actual": "No Exception",
+    "Details": ""
+  },
+  {
+    "Area": "Staging",
+    "TestName": "CleanOldUpdateRuns preserves exactly 3 runs",
+    "Status": "PASS",
+    "Expected": "3",
+    "Actual": "3",
+    "Details": ""
+  },
+  {
+    "Area": "Staging",
+    "TestName": "CleanOldUpdateRuns prunes oldest 3 runs and keeps newest 3",
+    "Status": "PASS",
+    "Expected": "Kept 40,50,60",
+    "Actual": "Kept 40,50,60",
+    "Details": ""
+  },
+  {
+    "Area": "Staging",
+    "TestName": "Empty version folder deleted after all its runs pruned",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": ""
+  },
+  {
+    "Area": "Staging",
+    "TestName": "Non-numeric run directories handled gracefully by CreationTimeUtc fallback",
+    "Status": "PASS",
+    "Expected": "No Crash",
+    "Actual": "No Crash",
+    "Details": ""
+  },
+  {
+    "Area": "Extraction",
+    "TestName": "Standard SystemFiles/Add-AppDevPackage.ps1 extracted",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": ""
+  },
+  {
+    "Area": "Extraction",
+    "TestName": "Recursive discovery finds Add-AppDevPackage.ps1 in nested zip",
+    "Status": "PASS",
+    "Expected": "Discovered",
+    "Actual": "Discovered at C:\\Users\\santi\\AppData\\Local\\Temp\\FF_Challenger_Sandbox\\extract2\\FluentFlyout_2.16.0_x64\\SystemFiles\\Add-AppDevPackage.ps1",
+    "Details": ""
+  },
+  {
+    "Area": "Extraction",
+    "TestName": "ZipFile.ExtractToDirectory with overwriteFiles=true handles existing files",
+    "Status": "PASS",
+    "Expected": "No IOException",
+    "Actual": "No IOException",
+    "Details": ""
+  },
+  {
+    "Area": "Extraction",
+    "TestName": "Corrupt zip archive throws InvalidDataException",
+    "Status": "PASS",
+    "Expected": "Throws InvalidDataException",
+    "Actual": "Caught InvalidDataException",
+    "Details": ""
+  },
+  {
+    "Area": "AST & Escaping",
+    "TestName": "Standard path",
+    "Status": "PASS",
+    "Expected": "0 errors, match evaluated path",
+    "Actual": "0 errors, evaluated='C:\\Users\\santi\\AppData\\Local\\Temp\\FluentFlyout\\updates\\2.16.0\\1700000000\\files\\SystemFiles'",
+    "Details": ""
+  },
+  {
+    "Area": "AST & Escaping",
+    "TestName": "Path with spaces",
+    "Status": "PASS",
+    "Expected": "0 errors, match evaluated path",
+    "Actual": "0 errors, evaluated='C:\\Program Files\\Fluent Flyout\\updates\\files\\SystemFiles'",
+    "Details": ""
+  },
+  {
+    "Area": "AST & Escaping",
+    "TestName": "Path with single quote (O'Connor)",
+    "Status": "PASS",
+    "Expected": "0 errors, match evaluated path",
+    "Actual": "0 errors, evaluated='C:\\Users\\O'Connor\\AppData\\Local\\Temp\\FluentFlyout\\files\\SystemFiles'",
+    "Details": ""
+  },
+  {
+    "Area": "AST & Escaping",
+    "TestName": "Multiple single quotes in path",
+    "Status": "PASS",
+    "Expected": "0 errors, match evaluated path",
+    "Actual": "0 errors, evaluated='C:\\Users\\Jack's & Jill's PC\\SystemFiles'",
+    "Details": ""
+  },
+  {
+    "Area": "AST & Escaping",
+    "TestName": "Path containing dollar sign ($)",
+    "Status": "PASS",
+    "Expected": "0 errors, match evaluated path",
+    "Actual": "0 errors, evaluated='C:\\Temp\\\\SystemFiles'",
+    "Details": ""
+  },
+  {
+    "Area": "AST & Escaping",
+    "TestName": "Path containing brackets [x64]",
+    "Status": "PASS",
+    "Expected": "0 errors, match evaluated path",
+    "Actual": "0 errors, evaluated='C:\\Updates\\[x64]\\FluentFlyout\\SystemFiles'",
+    "Details": ""
+  },
+  {
+    "Area": "AST & Escaping",
+    "TestName": "Path containing backticks and parentheses",
+    "Status": "PASS",
+    "Expected": "0 errors, match evaluated path",
+    "Actual": "0 errors, evaluated='C:\\Updates (x86_64)\\\release\\SystemFiles'",
+    "Details": ""
+  },
+  {
+    "Area": "AST & Escaping",
+    "TestName": "Large PID (Int32.MaxValue)",
+    "Status": "PASS",
+    "Expected": "0 errors, match evaluated path",
+    "Actual": "0 errors, evaluated='C:\\Temp\\SystemFiles'",
+    "Details": ""
+  },
+  {
+    "Area": "AST & Escaping",
+    "TestName": "PID 0 (System idle process)",
+    "Status": "PASS",
+    "Expected": "0 errors, match evaluated path",
+    "Actual": "0 errors, evaluated='C:\\Temp\\SystemFiles'",
+    "Details": ""
+  },
+  {
+    "Area": "AST & Escaping",
+    "TestName": "Set-Location uses -LiteralPath to prevent bracket globbing",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": ""
+  },
+  {
+    "Area": "Elevation",
+    "TestName": "ProcessStartInfo sets Verb = 'runas' for UAC elevation",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": ""
+  },
+  {
+    "Area": "Elevation",
+    "TestName": "ProcessStartInfo sets UseShellExecute = true (.NET requirement for Verb)",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": ""
+  },
+  {
+    "Area": "Elevation",
+    "TestName": "PowerShell arguments specify -NoProfile -ExecutionPolicy Bypass",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": ""
+  },
+  {
+    "Area": "Elevation",
+    "TestName": "Catches Win32Exception when user cancels or denies UAC prompt",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": ""
+  },
+  {
+    "Area": "Crypto",
+    "TestName": "10MB binary file SHA-256 matches system hash",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": ""
+  },
+  {
+    "Area": "Crypto",
+    "TestName": "Padded expected hash behavior tested",
+    "Status": "PASS",
+    "Expected": "Documented",
+    "Actual": "False",
+    "Details": "Exact string comparison is enforced"
+  },
+  {
+    "Area": "Crypto",
+    "TestName": "Truncated file rejected as invalid hash",
+    "Status": "PASS",
+    "Expected": "False",
+    "Actual": "False",
+    "Details": ""
+  },
+  {
+    "Area": "Crypto",
+    "TestName": "5 concurrent hash verifications on shared file all succeed (FileShare.Read)",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": ""
+  },
+  {
+    "Area": "Regression",
+    "TestName": "UpdateCheckerService default fork repo is unchihugo/FluentFlyout",
+    "Status": "PASS",
+    "Expected": "unchihugo/FluentFlyout",
+    "Actual": "unchihugo/FluentFlyout",
+    "Details": ""
+  },
+  {
+    "Area": "Regression",
+    "TestName": "UpdateCheckerService HttpClient timeout configured to 15s",
+    "Status": "PASS",
+    "Expected": "15s",
+    "Actual": "15s",
+    "Details": ""
+  },
+  {
+    "Area": "Regression",
+    "TestName": "SemVer comparisons match SemVer 2.0.0 rules",
+    "Status": "PASS",
+    "Expected": "c1=F, c2=T, c3=F, c4=T",
+    "Actual": "c1=False, c2=True, c3=False, c4=True",
+    "Details": ""
+  }
+]

@@ -63,15 +63,21 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote add upstream https://github.com/unchihugo/FluentFlyout.git -ErrorAction SilentlyContinue
+
+          $existingRemotes = git remote
+          if (-not ($existingRemotes -split "`r?`n" | Where-Object { $_ -eq "upstream" })) {
+            git remote add upstream https://github.com/unchihugo/FluentFlyout.git
+          }
           git fetch upstream --tags
 
           $target = $env:TARGET_TAG
           Write-Host "Attempting merge of upstream tag $target into master..."
-          try {
-            git merge $target -m "Merge upstream release $target" --allow-unrelated-histories -X ours
-          } catch {
-            Write-Warning "Merge returned a warning or conflict handled by strategy -X ours."
+          git merge $target -m "Merge upstream release $target" --allow-unrelated-histories -X ours
+          if ($LASTEXITCODE -ne 0) {
+            Write-Warning "Merge had conflicts. Resolving with -X ours..."
+            git checkout --ours .
+            git add -A
+            git commit -m "Resolved conflicts favoring fork patch" --allow-empty
           }
           Write-Host "Merge completed."
 
@@ -125,6 +131,14 @@ jobs:
         run: |
           & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" FluentFlyout_Setup.iss
 
+      - name: Commit and Push Updated Master Branch
+        if: env.SHOULD_BUILD == 'true'
+        shell: pwsh
+        run: |
+          git add FluentFlyoutWPF/FluentFlyout.csproj FluentFlyout_Setup.iss
+          git commit -m "Automated build: Sync upstream release $env:TARGET_TAG with patch" -a --allow-empty
+          git push origin master
+
       - name: Compute SHA-256 and Publish Release to Fixbound/FluentFlyout
         if: env.SHOULD_BUILD == 'true'
         shell: pwsh
@@ -141,13 +155,23 @@ jobs:
           $tag = $env:TARGET_TAG
           $notes = "| Version | SHA-256 hash |`n|---|---|`n|GitHub Release x64|$sha|"
 
-          Write-Host "Publishing release $tag with FluentFlyout_Setup.exe to Fixbound/FluentFlyout..."
-          gh release create $tag $setupExe --title "FluentFlyout $tag (Patched)" --notes $notes --repo Fixbound/FluentFlyout --clobber
+          Write-Host "Checking if release $tag already exists on Fixbound/FluentFlyout..."
+          $releaseExists = $false
+          try {
+            $existing = gh release view $tag --repo Fixbound/FluentFlyout --json tagName 2>$null | ConvertFrom-Json
+            if ($existing -and $existing.tagName -eq $tag) {
+              $releaseExists = $true
+            }
+          } catch {
+            $releaseExists = $false
+          }
 
-      - name: Commit and Push Updated Master Branch
-        if: env.SHOULD_BUILD == 'true'
-        shell: pwsh
-        run: |
-          git add FluentFlyoutWPF/FluentFlyout.csproj FluentFlyout_Setup.iss
-          git commit -m "Automated build: Sync upstream release $env:TARGET_TAG with patch" -a --allow-empty
-          git push origin master
+          if ($releaseExists) {
+            Write-Host "Release $tag exists. Uploading setup asset and updating release notes..."
+            gh release edit $tag --title "FluentFlyout $tag (Patched)" --notes $notes --repo Fixbound/FluentFlyout
+            gh release upload $tag $setupExe --repo Fixbound/FluentFlyout --clobber
+          } else {
+            Write-Host "Creating release $tag with target master..."
+            gh release create $tag $setupExe --target master --title "FluentFlyout $tag (Patched)" --notes $notes --repo Fixbound/FluentFlyout
+          }
+          Write-Host "Release publication completed successfully."

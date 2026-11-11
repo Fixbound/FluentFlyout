@@ -133,3 +133,29 @@ Si descargas cualquier `FluentFlyout_Setup.exe`, puedes verificar su integridad 
 (Get-FileHash .\FluentFlyout_Setup.exe -Algorithm SHA256).Hash
 ```
 El valor resultante coincidirá de forma idéntica con el publicado en la tabla de tu release.
+
+---
+
+## 5. Mejoras de Auditoría y Hardening Aplicadas
+
+1. **`auto-upstream-sync-release.yml` (Hardening Completo):**
+   - Removido el switch erróneo `-ErrorAction` sobre comandos nativos `git`.
+   - Reemplazado `--clobber` en `gh release create` por lógica dual: crea con `--target master` si no existe, o edita y sube con `gh release upload --clobber` si ya existe (para re-ejecuciones forzadas).
+   - Invertido el orden del pipeline: primero realiza `commit` y `push` de las versiones actualizadas a `origin master`, y luego publica la release apuntando formalmente al `master` ya sincronizado.
+   - Manejo de conflictos de merge con verificación de `$LASTEXITCODE` y resolución de árbol con `-X ours`.
+
+2. **`build-msix.yml` (Heredado de la tienda Microsoft):**
+   - Desactivado su disparador automático en `push` a ramas estándar para evitar fallos por falta de certificados de tienda en forks. Solo se mantiene activo para tags manuales o `workflow_dispatch`.
+
+3. **`notify-website.yml`:**
+   - Agregada la condición `if: github.repository == 'unchihugo/FluentFlyout'` para evitar fallos por falta del secreto `PAGES_CONTROLLER_PAT` en tu fork.
+
+4. **`UpdateInstallerService.cs` y Seguridad In-App:**
+   - Elevación selectiva: `Verb = isExe ? string.Empty : "runas"`, garantizando que el instalador de usuario Inno Setup (`FluentFlyout_Setup.exe`) corra directamente en el contexto del usuario actual sin UAC y sin riesgo de instalar en el perfil del Administrador.
+   - Verificación estricta de hash SHA-256: bajo `#if GITHUB_RELEASE`, se bloquea la instalación si el hash esperado está ausente.
+
+5. **`HomePage.xaml.cs` (Feedback de Usuario):**
+   - Agregado bloqueo reentrante (`_isApplyingUpdate`) y estado visual `"Downloading update..."` para prevenir descargas duplicadas concurrentes mientras el usuario espera.
+
+6. **`MainWindow.xaml.cs` (Inicio Automático en Registro):**
+   - Corregido el registro en `Run` para fijar siempre `"executablePath" --autostart`, preservando el inicio minimizado en la bandeja del sistema.

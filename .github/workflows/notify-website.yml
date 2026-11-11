@@ -10,6 +10,7 @@ on:
 
 jobs:
   dispatch:
+    if: github.repository == 'unchihugo/FluentFlyout'
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Website Update

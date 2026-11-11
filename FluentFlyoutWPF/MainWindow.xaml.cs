@@ -176,7 +176,7 @@ public partial class MainWindow : MicaWindow
             RegistryKey? key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             string? executablePath = Environment.ProcessPath;
             if (key != null && executablePath != null)
-                key.SetValue("FluentFlyout", executablePath);
+                key.SetValue("FluentFlyout", $"\"{executablePath}\" --autostart");
         }
 
         // display tray icon if enabled

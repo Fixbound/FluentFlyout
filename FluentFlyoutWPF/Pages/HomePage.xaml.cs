@@ -56,17 +56,31 @@ public partial class HomePage : Page
         }
     }
 
+    private bool _isApplyingUpdate = false;
+
     private async void ViewUpdates_Click(object sender, RoutedEventArgs e)
     {
+        if (_isApplyingUpdate)
+        {
+            return;
+        }
+
         if (UpdateState.Current.IsUpdateAvailable)
         {
             try
             {
+                _isApplyingUpdate = true;
+                UpdateStatusText.Text = "Downloading update...";
                 await UpdateInstallerService.ShowUpdateChoiceAndApplyAsync();
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, "Failed to run in-app update flow from ViewUpdates.");
+            }
+            finally
+            {
+                _isApplyingUpdate = false;
+                UpdateStatusText.Text = Application.Current.FindResource("UpdateAvailableNotificationTitle")?.ToString() ?? "Update available";
             }
         }
         else
@@ -79,6 +93,11 @@ public partial class HomePage : Page
 
     private async void CheckForUpdates_Click(object sender, RoutedEventArgs e)
     {
+        if (_isApplyingUpdate)
+        {
+            return;
+        }
+
         // prevent multiple clicks within 1 second
         if (DateTimeOffset.UtcNow.ToUnixTimeSeconds() - _lastChecked < 1)
         {
@@ -91,11 +110,18 @@ public partial class HomePage : Page
         {
             try
             {
+                _isApplyingUpdate = true;
+                UpdateStatusText.Text = "Downloading update...";
                 await UpdateInstallerService.ShowUpdateChoiceAndApplyAsync();
             }
             catch (Exception ex)
             {
                 Logger.Error(ex, "Failed to run in-app update flow from HomePage.");
+            }
+            finally
+            {
+                _isApplyingUpdate = false;
+                UpdateStatusText.Text = Application.Current.FindResource("UpdateAvailableNotificationTitle")?.ToString() ?? "Update available";
             }
         }
         else

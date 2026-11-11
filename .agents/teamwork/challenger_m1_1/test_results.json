@@ -1,0 +1,418 @@
+[
+  {
+    "Category": "Regex",
+    "TestName": "Standard workflow format",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Uppercase hex hash",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Keyword sha256",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Header SHA-256:",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Header sha256:",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Prefix checksum:",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Space separated sha256",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Noisy body with 40-char git commit SHA",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Markdown bold **Checksum:**",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Backtick wrapped hash `hash`",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Multi-arch notes (ARM64 before x64)",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Previous release hash mentioned",
+    "Status": "PASS",
+    "Expected": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Malformed 63-hex string",
+    "Status": "PASS",
+    "Expected": "",
+    "Actual": "",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Malformed 65-hex string",
+    "Status": "PASS",
+    "Expected": "",
+    "Actual": "",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Non-hex string (contains 'g')",
+    "Status": "PASS",
+    "Expected": "",
+    "Actual": "",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "No checksum present in notes",
+    "Status": "PASS",
+    "Expected": "",
+    "Actual": "",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Regex",
+    "TestName": "Empty body",
+    "Status": "PASS",
+    "Expected": "",
+    "Actual": "",
+    "Details": "URL: https://github.com/unchihugo/FluentFlyout/releases/download/v2.16.0/FluentFlyout_2.16.0_x64_Installer.zip"
+  },
+  {
+    "Category": "Asset",
+    "TestName": "Prefers x64 Installer.zip over arm64",
+    "Status": "PASS",
+    "Expected": "https://example.com/x64.zip",
+    "Actual": "https://example.com/x64.zip",
+    "Details": ""
+  },
+  {
+    "Category": "Asset",
+    "TestName": "Ignores non-Installer.zip assets",
+    "Status": "PASS",
+    "Expected": "",
+    "Actual": "",
+    "Details": ""
+  },
+  {
+    "Category": "Version",
+    "TestName": "Minor upgrade: 2.15.0 -> 2.16.0",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='2.15.0', Newest='2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Patch upgrade: 2.16.0 -> 2.16.1",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='2.16.0', Newest='2.16.1'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Major upgrade: 2.16.0 -> 3.0.0",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='2.16.0', Newest='3.0.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Same version: 2.16.0 -> 2.16.0",
+    "Status": "PASS",
+    "Expected": "False",
+    "Actual": "False",
+    "Details": "Current='2.16.0', Newest='2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Downgrade: 2.16.0 -> 2.15.0",
+    "Status": "PASS",
+    "Expected": "False",
+    "Actual": "False",
+    "Details": "Current='2.16.0', Newest='2.15.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "v-prefix on both: v2.15.0 -> v2.16.0",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='v2.15.0', Newest='v2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Uppercase V on current: V2.15.0 -> v2.16.0",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='V2.15.0', Newest='v2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "v on newest only: 2.15.0 -> v2.16.0",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='2.15.0', Newest='v2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "v on current only: v2.15.0 -> 2.16.0",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='v2.15.0', Newest='2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "4-part revision upgrade: 2.16.0.0 -> 2.16.0.1",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='2.16.0.0', Newest='2.16.0.1'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "3-part vs 4-part same: 2.16.0 vs 2.16.0.0",
+    "Status": "PASS",
+    "Expected": "False",
+    "Actual": "False",
+    "Details": "Current='2.16.0', Newest='2.16.0.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "3-part vs 4-part upgrade: 2.16.0 vs 2.16.0.1",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='2.16.0', Newest='2.16.0.1'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "2-part to 3-part: 2.15 vs 2.16.0",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='2.15', Newest='2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "2-part same: 2.16 vs 2.16.0",
+    "Status": "PASS",
+    "Expected": "False",
+    "Actual": "False",
+    "Details": "Current='2.16', Newest='2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Prerelease to higher patch: v2.16.0-beta.1 -> v2.16.1",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='v2.16.0-beta.1', Newest='v2.16.1'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Prerelease to stable of same version: v2.16.0-beta.1 -> v2.16.0",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='v2.16.0-beta.1', Newest='v2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Prerelease to next prerelease: v2.16.0-beta.1 -> v2.16.0-beta.2",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='v2.16.0-beta.1', Newest='v2.16.0-beta.2'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Stable to prerelease patch: v2.16.0 -> v2.16.1-rc1",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='v2.16.0', Newest='v2.16.1-rc1'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Build metadata: v2.15.0 -> v2.16.0+build123",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='v2.15.0', Newest='v2.16.0+build123'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Empty current version",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='', Newest='v2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Empty newest version",
+    "Status": "PASS",
+    "Expected": "False",
+    "Actual": "False",
+    "Details": "Current='v2.16.0', Newest=''"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Invalid current string",
+    "Status": "PASS",
+    "Expected": "False",
+    "Actual": "False",
+    "Details": "Current='invalid', Newest='v2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Invalid newest string",
+    "Status": "PASS",
+    "Expected": "False",
+    "Actual": "False",
+    "Details": "Current='v2.16.0', Newest='invalid'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Whitespace current",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='  v2.15.0  ', Newest='v2.16.0'"
+  },
+  {
+    "Category": "Version",
+    "TestName": "Large major version jump",
+    "Status": "PASS",
+    "Expected": "True",
+    "Actual": "True",
+    "Details": "Current='v2.16.0', Newest='v999.0.0'"
+  },
+  {
+    "Category": "Crypto",
+    "TestName": "NIST Empty file SHA-256",
+    "Status": "PASS",
+    "Expected": "true",
+    "Actual": "true",
+    "Details": "Hash matches e3b0c442..."
+  },
+  {
+    "Category": "Crypto",
+    "TestName": "NIST Fox string SHA-256",
+    "Status": "PASS",
+    "Expected": "true",
+    "Actual": "true",
+    "Details": "Hash matches d7a8fbb..."
+  },
+  {
+    "Category": "Crypto",
+    "TestName": "5MB binary vs Get-FileHash",
+    "Status": "PASS",
+    "Expected": "true",
+    "Actual": "true",
+    "Details": "System hash matched: cabc8f013e20706013799e0093dc000353780b086a6e5d8d7ad6a42de682c9b3"
+  },
+  {
+    "Category": "Crypto",
+    "TestName": "Uppercase expected hash comparison",
+    "Status": "PASS",
+    "Expected": "true",
+    "Actual": "true",
+    "Details": ""
+  },
+  {
+    "Category": "Crypto",
+    "TestName": "Detect 1-bit file tampering",
+    "Status": "PASS",
+    "Expected": "false",
+    "Actual": "false",
+    "Details": "Tampering correctly detected"
+  },
+  {
+    "Category": "Crypto",
+    "TestName": "Non-existent file returns false",
+    "Status": "PASS",
+    "Expected": "false",
+    "Actual": "false",
+    "Details": ""
+  },
+  {
+    "Category": "Script",
+    "TestName": "PowerShell AST Parse Syntax",
+    "Status": "PASS",
+    "Expected": "0 errors",
+    "Actual": "0 errors",
+    "Details": ""
+  },
+  {
+    "Category": "Script",
+    "TestName": "Hardened script commands present",
+    "Status": "PASS",
+    "Expected": "All present",
+    "Actual": "All present",
+    "Details": ""
+  }
+]

@@ -1,0 +1,10 @@
+$tempFile = [System.IO.Path]::GetTempFileName()
+[System.IO.File]::WriteAllText($tempFile, 'Test update content for FluentFlyout')
+$bytes = [System.IO.File]::ReadAllBytes($tempFile)
+$sha = [System.Security.Cryptography.SHA256]::Create()
+$hash = $sha.ComputeHash($bytes)
+$hexString = [System.Convert]::ToHexString($hash)
+$expectedLower = $hexString.ToLowerInvariant()
+$match = [string]::Equals($hexString, $expectedLower, [System.StringComparison]::OrdinalIgnoreCase)
+[System.IO.File]::Delete($tempFile)
+Write-Output "Hex: $hexString, Match: $match"

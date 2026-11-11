@@ -179,7 +179,7 @@ public static class UpdateInstallerService
             return string.Empty;
         }
 
-        // Verify SHA-256 hash using native managed cryptography if provided
+        // Verify SHA-256 hash using native managed cryptography
         if (!string.IsNullOrWhiteSpace(expectedSha256))
         {
             bool verified = await VerifyFileHashAsync(targetFile, expectedSha256);
@@ -190,7 +190,12 @@ public static class UpdateInstallerService
         }
         else
         {
+#if GITHUB_RELEASE
+            Logger.Error($"Update rejected: SHA-256 digest is strictly required under GITHUB_RELEASE but was missing for version {version}.");
+            return string.Empty;
+#else
             Logger.Warn($"No expected SHA-256 provided for update {version}; proceeding without digest verification.");
+#endif
         }
 
         return runDir;
@@ -331,12 +336,14 @@ public static class UpdateInstallerService
 
             Logger.Info($"Generated installer script at {applyScript}. Launching elevated PowerShell...");
 
+            bool isExe = File.Exists(exePath);
+
             var startInfo = new ProcessStartInfo
             {
                 FileName = "powershell.exe",
                 Arguments = $"-NoProfile -ExecutionPolicy Bypass -File \"{applyScript}\"",
                 UseShellExecute = true,
-                Verb = "runas",
+                Verb = isExe ? string.Empty : "runas",
                 WorkingDirectory = runDir
             };
 
