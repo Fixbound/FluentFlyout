@@ -33,7 +33,10 @@ public partial class HomePage : Page
         }
         catch
         {
-            VersionTextBlock.Text = "debug version";
+            var asmVer = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            VersionTextBlock.Text = asmVer != null && (asmVer.Major > 0 || asmVer.Minor > 0)
+                ? $"v{asmVer.Major}.{asmVer.Minor}.{asmVer.Build}"
+                : "v2.16.0";
         }
 
         UpdateLastCheckedText();
@@ -53,9 +56,23 @@ public partial class HomePage : Page
         }
     }
 
-    private void ViewUpdates_Click(object sender, RoutedEventArgs e)
+    private async void ViewUpdates_Click(object sender, RoutedEventArgs e)
     {
-        Notifications.OpenChangelogInBrowser();
+        if (UpdateState.Current.IsUpdateAvailable)
+        {
+            try
+            {
+                await UpdateInstallerService.ShowUpdateChoiceAndApplyAsync();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Failed to run in-app update flow from ViewUpdates.");
+            }
+        }
+        else
+        {
+            await CheckForUpdatesAsync();
+        }
     }
 
     private long _lastChecked = 0;
@@ -72,26 +89,14 @@ public partial class HomePage : Page
 
         if (UpdateState.Current.IsUpdateAvailable)
         {
-            // manual flow ignores SkippedUpdateVersion: a deliberate check always offers the update
-            bool inAppAvailable = !string.IsNullOrEmpty(UpdateState.Current.AssetUrl) &&
-                !string.IsNullOrEmpty(UpdateState.Current.ExpectedSha256);
-
-            if (inAppAvailable)
+            try
             {
-                try
-                {
-                    await UpdateInstallerService.ShowUpdateChoiceAndApplyAsync();
-                }
-                catch (Exception ex)
-                {
-                    Logger.Error(ex, "Failed to run in-app update flow from HomePage.");
-                }
-
-                return;
+                await UpdateInstallerService.ShowUpdateChoiceAndApplyAsync();
             }
-
-            string url = !string.IsNullOrEmpty(UpdateState.Current.UpdateUrl) ? UpdateState.Current.UpdateUrl : "https://fluentflyout.com/changelog/";
-            UpdateCheckerService.OpenUpdateUrl(url);
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Failed to run in-app update flow from HomePage.");
+            }
         }
         else
         {

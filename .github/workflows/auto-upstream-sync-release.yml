@@ -1,0 +1,153 @@
+name: Auto Upstream Sync & Release
+
+on:
+  schedule:
+    # Run every 6 hours automatically
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+    inputs:
+      force_build:
+        description: 'Force build even if tag matches latest'
+        required: false
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  check-and-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check latest releases
+        id: check_release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $upstream = gh api repos/unchihugo/FluentFlyout/releases/latest | ConvertFrom-Json
+          $upstreamTag = $upstream.tag_name
+          Write-Host "Upstream latest release tag: $upstreamTag"
+
+          $myLatestTag = ""
+          try {
+            $myRelease = gh api repos/Fixbound/FluentFlyout/releases/latest | ConvertFrom-Json
+            $myLatestTag = $myRelease.tag_name
+          } catch {
+            Write-Host "No release found in fork yet or error fetching."
+          }
+          Write-Host "Fork latest release tag: $myLatestTag"
+
+          $force = "${{ inputs.force_build }}" -eq "true"
+          if ($upstreamTag -ne $myLatestTag -or $force) {
+            Write-Host "New version detected or force build enabled ($upstreamTag). Proceeding to build."
+            "SHOULD_BUILD=true" | Out-File -FilePath $env:GITHUB_ENV -Append
+            "TARGET_TAG=$upstreamTag" | Out-File -FilePath $env:GITHUB_ENV -Append
+          } else {
+            Write-Host "Fork is already up to date with upstream release ($myLatestTag). Nothing to do."
+            "SHOULD_BUILD=false" | Out-File -FilePath $env:GITHUB_ENV -Append
+          }
+
+      - name: Checkout Fork
+        if: env.SHOULD_BUILD == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: master
+          fetch-depth: 0
+          token: ${{ github.token }}
+
+      - name: Merge Upstream Release Changes
+        if: env.SHOULD_BUILD == 'true'
+        shell: pwsh
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git remote add upstream https://github.com/unchihugo/FluentFlyout.git -ErrorAction SilentlyContinue
+          git fetch upstream --tags
+
+          $target = $env:TARGET_TAG
+          Write-Host "Attempting merge of upstream tag $target into master..."
+          try {
+            git merge $target -m "Merge upstream release $target" --allow-unrelated-histories -X ours
+          } catch {
+            Write-Warning "Merge returned a warning or conflict handled by strategy -X ours."
+          }
+          Write-Host "Merge completed."
+
+      - name: Setup .NET SDK 10.x
+        if: env.SHOULD_BUILD == 'true'
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Install Inno Setup
+        if: env.SHOULD_BUILD == 'true'
+        shell: pwsh
+        run: |
+          choco install innosetup --no-progress
+          $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) {
+            throw "ISCC.exe not found at $iscc after Chocolatey installation"
+          }
+          Write-Host "Inno Setup compiler verified at $iscc"
+
+      - name: Update Version Numbers
+        if: env.SHOULD_BUILD == 'true'
+        shell: pwsh
+        run: |
+          $verClean = $env:TARGET_TAG.TrimStart('v').Trim()
+          Write-Host "Setting project version to $verClean"
+
+          # Update FluentFlyout.csproj
+          $csproj = "FluentFlyoutWPF/FluentFlyout.csproj"
+          (Get-Content $csproj) `
+            -replace '<Version>.*?</Version>', "<Version>$verClean</Version>" `
+            -replace '<AssemblyVersion>.*?</AssemblyVersion>', "<AssemblyVersion>$verClean.0</AssemblyVersion>" `
+            -replace '<FileVersion>.*?</FileVersion>', "<FileVersion>$verClean.0</FileVersion>" |
+            Set-Content $csproj
+
+          # Update FluentFlyout_Setup.iss
+          $iss = "FluentFlyout_Setup.iss"
+          (Get-Content $iss) `
+            -replace '#define MyAppVersion ".*?"', "#define MyAppVersion `"$verClean`"" |
+            Set-Content $iss
+
+      - name: Publish Patched Application (Release x64 with GITHUB_RELEASE)
+        if: env.SHOULD_BUILD == 'true'
+        shell: pwsh
+        run: |
+          dotnet publish FluentFlyoutWPF/FluentFlyout.csproj -c Release -r win-x64 --no-self-contained -o publish_x64 /p:DefineConstants="GITHUB_RELEASE"
+
+      - name: Compile Inno Setup Executable
+        if: env.SHOULD_BUILD == 'true'
+        shell: pwsh
+        run: |
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" FluentFlyout_Setup.iss
+
+      - name: Compute SHA-256 and Publish Release to Fixbound/FluentFlyout
+        if: env.SHOULD_BUILD == 'true'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $setupExe = "InstallerOutput/FluentFlyout_Setup.exe"
+          if (-not (Test-Path $setupExe)) {
+            throw "FluentFlyout_Setup.exe not found at $setupExe"
+          }
+          $sha = (Get-FileHash $setupExe -Algorithm SHA256).Hash.ToLowerInvariant()
+          Write-Host "Computed SHA-256: $sha"
+
+          $tag = $env:TARGET_TAG
+          $notes = "| Version | SHA-256 hash |`n|---|---|`n|GitHub Release x64|$sha|"
+
+          Write-Host "Publishing release $tag with FluentFlyout_Setup.exe to Fixbound/FluentFlyout..."
+          gh release create $tag $setupExe --title "FluentFlyout $tag (Patched)" --notes $notes --repo Fixbound/FluentFlyout --clobber
+
+      - name: Commit and Push Updated Master Branch
+        if: env.SHOULD_BUILD == 'true'
+        shell: pwsh
+        run: |
+          git add FluentFlyoutWPF/FluentFlyout.csproj FluentFlyout_Setup.iss
+          git commit -m "Automated build: Sync upstream release $env:TARGET_TAG with patch" -a --allow-empty
+          git push origin master

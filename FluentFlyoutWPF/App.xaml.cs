@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2024-2026 The FluentFlyout Authors
+// Copyright (c) 2024-2026 The FluentFlyout Authors
 // SPDX-License-Identifier: GPL-3.0-or-later
 
 using FluentFlyout.Classes;
@@ -15,6 +15,14 @@ public partial class App : Application
 {
     protected override async void OnStartup(StartupEventArgs e)
     {
+        // Prevent random unhandled UI/Dispatcher exceptions from silently crashing the app
+        DispatcherUnhandledException += (sender, args) =>
+        {
+            NLog.LogManager.GetCurrentClassLogger().Error(args.Exception, "Unhandled dispatcher exception caught and handled");
+            NLog.LogManager.Flush();
+            args.Handled = true;
+        };
+
         // log unhandled exceptions before crashing
         AppDomain.CurrentDomain.UnhandledException += (sender, args) =>
         {

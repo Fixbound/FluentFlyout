@@ -42,7 +42,14 @@ internal static class Notifications
                         }
                         break;
                     case "updateNow":
-                        UpdateInstallerService.ShowUpdateChoiceAndApplyAsync().CatchError("Failed to run in-app update flow.");
+                        try
+                        {
+                            _ = UpdateInstallerService.ShowUpdateChoiceAndApplyAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error(ex, "Failed to run in-app update flow.");
+                        }
                         break;
                 }
             }

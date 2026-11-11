@@ -98,23 +98,40 @@ public partial class MainWindow : MicaWindow
         };
         _displayRefreshTimer.Tick += DisplayRefreshTimer_Tick;
 
-        if (!singleton.WaitOne(TimeSpan.Zero, true)) // if another instance is already running, close this one
+        bool hasHandle = false;
+        try
         {
-            // Signal the existing instance to open settings
-            Task.Run(() =>
+            hasHandle = singleton.WaitOne(TimeSpan.Zero, true);
+        }
+        catch (AbandonedMutexException)
+        {
+            // The previous instance was terminated without releasing the mutex.
+            // We now own the mutex, so we can safely continue.
+            hasHandle = true;
+        }
+
+        if (!hasHandle) // if another instance is already running, close this one
+        {
+            // Signal the existing instance to open settings synchronously before exiting
+            try
             {
-                try
+                if (EventWaitHandle.TryOpenExisting("FluentFlyout_OpenSettings", out var settingsEvent))
                 {
-                    using (EventWaitHandle settingsEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "FluentFlyout_OpenSettings"))
+                    using (settingsEvent)
                     {
                         settingsEvent.Set();
                     }
                 }
-                catch (Exception ex)
+                else
                 {
-                    Logger.Error(ex, "Failed to signal existing instance");
+                    using var fallbackEvent = new EventWaitHandle(false, EventResetMode.AutoReset, "FluentFlyout_OpenSettings");
+                    fallbackEvent.Set();
                 }
-            });
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(ex, "Failed to signal existing instance to open settings");
+            }
 
             Environment.Exit(0);
         }
@@ -166,6 +183,24 @@ public partial class MainWindow : MicaWindow
         if (!SettingsManager.Current.NIconHide)
         {
             nIcon.Visibility = Visibility.Visible;
+            try
+            {
+                nIcon.Register();
+            }
+            catch (Exception ex)
+            {
+                Logger.Warn(ex, "Initial nIcon.Register call failed");
+            }
+        }
+
+        bool isAutostart = Environment.GetCommandLineArgs().Any(a => a.Equals("--autostart", StringComparison.OrdinalIgnoreCase) || a.Equals("/autostart", StringComparison.OrdinalIgnoreCase));
+        if (!isAutostart)
+        {
+            Dispatcher.InvokeAsync(async () =>
+            {
+                await Task.Delay(300);
+                SettingsWindow.ShowInstance();
+            });
         }
 
         cts = new CancellationTokenSource();
@@ -211,7 +246,10 @@ public partial class MainWindow : MicaWindow
             }
             catch
             {
-                SettingsManager.Current.LastKnownVersion = "debug";
+                var asmVer = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+                SettingsManager.Current.LastKnownVersion = asmVer != null && (asmVer.Major > 0 || asmVer.Minor > 0)
+                    ? $"v{asmVer.Major}.{asmVer.Minor}.{asmVer.Build}"
+                    : "v2.16.0";
             }
 
             Logger.Info($"Current version: {SettingsManager.Current.LastKnownVersion}");
@@ -1967,11 +2005,14 @@ public partial class MainWindow : MicaWindow
         try
         {
             nIcon.Visibility = Visibility.Collapsed;
+            try { nIcon.Unregister(); } catch { }
 
             if (!SettingsManager.Current.NIconHide)
             {
+                ThemeManager.UpdateTrayIcon();
                 nIcon.Visibility = Visibility.Visible;
                 nIcon.Register();
+                Logger.Info("Tray icon safely registered in taskbar notify area");
             }
         }
         catch (Exception ex)
@@ -1985,6 +2026,7 @@ public partial class MainWindow : MicaWindow
         Hide();
         UpdateUILayout();
         ThemeManager.ApplySavedTheme();
+        RecreateTrayIconSafely();
 
         // add tray icon hook when taskbar resets
         try

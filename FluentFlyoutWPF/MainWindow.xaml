@@ -1,4 +1,4 @@
-﻿<controls:MicaWindow x:Class="FluentFlyoutWPF.MainWindow"
+<controls:MicaWindow x:Class="FluentFlyoutWPF.MainWindow"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -268,7 +268,7 @@
             MenuOnRightClick="True"
             TooltipText="FluentFlyout"
             Icon="/Resources/FluentFlyout2.ico"
-            Margin="0,127,0,114" Visibility="Collapsed">
+            Margin="0,127,0,114" Visibility="Visible">
             <tray:NotifyIcon.Menu>
                 <ContextMenu>
                     <ui:MenuItem x:Name="NotifyIconSettings" Header="{DynamicResource TrayIcon_SettingsOption}" Click="openSettings">

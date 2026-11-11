@@ -92,7 +92,7 @@ public partial class VolumeMixerViewModel : ObservableObject, IDisposable
 
     private void ClearSessions()
     {
-        foreach (var session in Sessions)
+        foreach (var session in Sessions.ToArray())
             session.VolumeChanged -= OnSessionVolumeChanged;
 
         Sessions.Clear();
@@ -252,13 +252,18 @@ public partial class VolumeMixerViewModel : ObservableObject, IDisposable
 
     public void OnPollTick(object? sender, EventArgs e)
     {
-        SyncMasterFromDevice();
-
-        foreach (var session in Sessions)
+        try
         {
-            session.SyncFromDevice();
-            //Logger.Trace("Session '{0}' (PID {1}) - Volume: {2}, Muted: {3}, State: {4}",
-            //    session.DisplayName, session.ProcessId, session.Volume, session.IsMuted, session.State);
+            SyncMasterFromDevice();
+
+            foreach (var session in Sessions.ToArray())
+            {
+                session.SyncFromDevice();
+            }
+        }
+        catch (Exception ex)
+        {
+            Logger.Warn(ex, "Error while updating audio session in volume mixer poll tick");
         }
     }
 

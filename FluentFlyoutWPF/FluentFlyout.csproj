@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows10.0.22000.0</TargetFramework>
@@ -11,6 +11,9 @@
     <AssemblyName>$(MSBuildProjectName)</AssemblyName>
     <Platforms>x64;ARM64</Platforms>
 	<RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <Version>2.16.1</Version>
+    <AssemblyVersion>2.16.1.0</AssemblyVersion>
+    <FileVersion>2.16.1.0</FileVersion>
     <LangVersion>preview</LangVersion>
     <Configurations>Debug;Release;GitHub Release</Configurations>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -49,6 +52,11 @@
     <PackageReference Include="unchihugo.WPF-UI" Version="4.4.2" />
     <PackageReference Include="WPF-UI.Tray" Version="4.3.0" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\FluentFlyout2.ico" />
+    <Resource Include="Resources\TrayIcons\FluentFlyoutBlack.png" />
+    <Resource Include="Resources\TrayIcons\FluentFlyoutWhite.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NLog.config">
